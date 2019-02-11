@@ -1,19 +1,33 @@
 #!/usr/bin/env node
-//import makeHelp from '../files/calc';
+// import makeHelp from '../files/calc';
 import commander from 'commander';
 
 const program = require('commander');
 
 program
-  .version('0.1.0')
-  .option('-p, --peppers', 'Add peppers')
-  .option('-P, --pineapple', 'Add pineapple')
-  .option('-b, --bbq-sauce', 'Add bbq sauce')
-  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
+  .version('0.0.1', '-v, --version')
+  .description(`Usage: gendiff [options] <firstConfig> <secondConfig>
+
+  Compares two configuration files and shows a difference.
+
+  Options:
+
+    -h, --help           output usage information
+    -V, --version        output the version number
+    -f, --format [type]  Output format`)
+  .option('-h, --help', program.description)
+  .option('-V, --version', 'output the version number')
+  .option('-f, --format [type]', 'Output format [type]', 'type')
   .parse(process.argv);
 
-console.log('you ordered a pizza with:');
-if (program.peppers) console.log('  - peppers');
-if (program.pineapple) console.log('  - pineapple');
-if (program.bbqSauce) console.log('  - bbq');
-console.log('  - %s cheese', program.cheese);
+if (program.help) {console.log(`Usage: gendiff [options] <firstConfig> <secondConfig>
+
+Compares two configuration files and shows a difference.
+
+Options:
+
+  -h, --help           output usage information
+  -V, --version        output the version number
+  -f, --format [type]  Output format`);}
+if (program.version) console.log(program.version);
+if (program.format) console.log('  - % format', program.format);
