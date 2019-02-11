@@ -8,7 +8,7 @@ start:
 	npx babel-node -- src/bin/start.js
 
 test:
-	npx babel-node -- src/bin/test.js
+	npm test
 	
 publish:
 	npm publish
