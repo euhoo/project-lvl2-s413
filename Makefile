@@ -1,17 +1,17 @@
-install:
-	npm install
+install: 
+    npm install
+
+run:
+	npx babel-node -- 'src/bin/hexlet.js' 10
+
+build:
+	npm run build
+
+test:
+	npm test
 
 lint:
 	npx eslint .
 
-start:
-	npx babel-node -- src/bin/start.js
-
-gendiff:
-	npx babel-node -- src/bin/gendiff.js
-	
-test:
-	npm test
-	
 publish:
 	npm publish
