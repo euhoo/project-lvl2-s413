@@ -1,4 +1,4 @@
-import getDiff from '../src/bin/gendiff';
+import getDiff from '../src/files/makeDifference';
 
 
 const before = {
