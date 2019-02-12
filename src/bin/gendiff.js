@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import program from 'commander';
+import { func } from '..';
 
 program
   .version('1.0.27', '-V, --version')
@@ -9,3 +10,5 @@ program
 program.parse(process.argv);
 
 if (!program.args.length) program.help();
+
+console.log(func('Well done'));
