@@ -1,4 +1,9 @@
 import { has } from 'lodash';
+// import { fs } from ; найти и импортировать сюда нужную библиотеку.
+
+// с помощью функции из библиотеки fs читаем 2 файла в 2 строки
+// с помощью встроенной функции JSON.parse эти строки делаем объектами
+// далее работаем с объектами
 
 export const makeArr = (before, after) => {
   const total = Object.assign({}, before, after);

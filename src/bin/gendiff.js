@@ -5,6 +5,7 @@ import getDiff from '../files/makeDifference';
 program
   .version('1.0.8', '-V, --version')
   .description('Compares two configuration files and shows a difference.')
+  .arguments('<first> <second>')
   .option('-f, --format [type]', 'Output format');
 program.parse(process.argv);
 

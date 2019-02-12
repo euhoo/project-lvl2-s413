@@ -1,6 +1,6 @@
 {
   "name": "euhoop2",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "second project",
   "scripts": {
     "test": "jest --watch",
