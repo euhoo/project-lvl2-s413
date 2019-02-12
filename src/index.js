@@ -15,10 +15,12 @@ export const makeArr = (before, after) => {
     if (has(before, item) && has(after, item)) {
       return (before[item] === after[item]) ? [...acc, `    ${item}: ${first}`] : [...acc, `  + ${item}: ${second}`, `  - ${item}: ${first}`];
     }
-    if (has(before, item)) return [...acc, `  - ${item}: ${first}`];
-    return [...acc, `  + ${item}: ${second}`];
+    if (has(after, item)) return [...acc, `  + ${item}: ${second}`];
+    return [...acc, `  - ${item}: ${first}`];
   };
-  return keys.reduce(func, []);
+  const res = keys.reduce(func, []);
+  console.log(res);
+  return res;
 };
 
 export const makeStr = (arr) => {
