@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import program from 'commander';
-import { func } from '..';
+import { func } from '../index';
 
 program
   .version('1.0.27', '-V, --version')
