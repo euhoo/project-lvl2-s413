@@ -5,7 +5,7 @@ import path from 'path';
 const parser = {
   json: JSON.parse,
   // ini: ini.parse,
-  yaml: yaml.safeLoad,
+  yml: yaml.safeLoad,
 };
 export default (filePath) => {
   const extention = path.extname(filePath).slice(1).toLowerCase();
