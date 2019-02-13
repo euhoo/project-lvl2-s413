@@ -14,7 +14,7 @@ const buildAst = (obj, obj2) => {
     const valueBefore = obj[key];
     const valueAfter = obj2[key];
     if (_.has(obj2, key) && _.has(obj, key)) {
-      if (!(valueBefore === valueAfter)) return [...acc, { value: valueBefore, key, status: '-' }, { value: valueAfter, key, status: '+' }];
+      if (!(valueBefore === valueAfter)) return [...acc, { value: valueAfter, key, status: '+' }, { value: valueBefore, key, status: '-' }];
       return [...acc, { value: valueBefore, key, status: ' ' }];
     } if (_.has(obj2, key)) return [...acc, { value: valueAfter, key, status: '+' }];
     return [...acc, { value: valueBefore, key, status: '-' }];
