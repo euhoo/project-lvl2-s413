@@ -3,7 +3,7 @@ import genDiff from '../src';
 const beforePath = '__tests__/__fixtures__/before.json';
 const afterPath = '__tests__/__fixtures__/after.json';
 
-test('If both path\'s correct ', () => {
+test('Test1', () => {
   const received = genDiff(beforePath, afterPath);
   // console.log(`Мой вариант:\n ${received}`);
 

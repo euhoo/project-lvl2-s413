@@ -1,28 +1,37 @@
-import { has } from 'lodash';
-import fs from 'fs';
+import _ from 'lodash';
+import makeStrFromFile from './utils';
 
-const makeStrFromFile = pathToFile => fs.readFileSync(pathToFile, 'utf-8');
-
-const makeArr = (before, after) => {
-  const unionOfObjects = Object.assign({}, before, after);
-  const keys = Object.keys(unionOfObjects);
+const makeTree = (obj, obj2) => {
+  const keys = _.union(Object.keys(obj), Object.keys(obj2));
   return keys.reduce((acc, key) => {
-    if (has(before, key) && has(after, key)) {
-      return (before[key] === after[key]) ? [...acc, { name: before[key], key, operation: ' ' }]
-        : [...acc, { name: before[key], key, operation: '-' }, { name: after[key], key, operation: '+' }];
+    const value = obj[key];
+    const value2 = obj2[key];
+    const res = {
+      value,
+      key,
+      status: '-',
+    };
+    if (_.has(obj2, key) && _.has(obj, key)) {
+      if (!(value === value2)) return [...acc, res, { value: value2, key, status: '+' }];
+      res.status = ' ';
+    } else if (_.has(obj2, key)) {
+      res.value = value2;
+      res.status = '+';
     }
-    if (has(after, key)) return [...acc, { name: after[key], key, operation: '+' }];
-    return [...acc, { name: before[key], key, operation: '-' }];
+    return [...acc, res];
   }, []);
 };
-const makeStringFromArray = (arr) => {
-  const resultString = arr.reduce((acc, obj) => `${acc}  ${obj.operation} ${obj.key}: ${obj.name}\n`, '');
-  return `{\n${resultString}}`;
+
+const makeString = (arr) => {
+  const str = arr.reduce((acc, obj) => `${acc}  ${obj.status} ${obj.key}: ${obj.value}\n`, '');
+  return `{\n${str}}`;
 };
 
 export default (filePathBefore, filePathAfter) => {
-  const [strBefore, strAfter] = [makeStrFromFile(filePathBefore), makeStrFromFile(filePathAfter)];
-  const [objBefore, objAfter] = [JSON.parse(strBefore), JSON.parse(strAfter)];
-  const arr = makeArr(objBefore, objAfter);
-  return makeStringFromArray(arr);
+  const strBefore = makeStrFromFile(filePathBefore);
+  const strAfter = makeStrFromFile(filePathAfter);
+  const objBefore = JSON.parse(strBefore);
+  const objAfter = JSON.parse(strAfter);
+  const arr = makeTree(objBefore, objAfter);
+  return makeString(arr);
 };
