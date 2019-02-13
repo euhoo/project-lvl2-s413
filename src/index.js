@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import makeStrFromFile from './utils';
+import getParser from './parser';
 
 const makeTree = (obj, obj2) => {
   const keys = _.union(Object.keys(obj), Object.keys(obj2));
@@ -22,16 +23,12 @@ const makeTree = (obj, obj2) => {
   }, []);
 };
 
-const makeString = (arr) => {
-  const str = arr.reduce((acc, obj) => `${acc}  ${obj.status} ${obj.key}: ${obj.value}\n`, '');
-  return `{\n${str}}`;
-};
-
 export default (filePathBefore, filePathAfter) => {
   const strBefore = makeStrFromFile(filePathBefore);
   const strAfter = makeStrFromFile(filePathAfter);
-  const objBefore = JSON.parse(strBefore);
-  const objAfter = JSON.parse(strAfter);
+  const parse = getParser(filePathBefore);
+  const objBefore = parse(strBefore);
+  const objAfter = parse(strAfter);
   const arr = makeTree(objBefore, objAfter);
-  return makeString(arr);
+  return makeStrFromFile(arr);
 };
