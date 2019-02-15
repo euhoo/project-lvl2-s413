@@ -4,22 +4,24 @@ const buildAst = (obj = {}, obj2 = {}) => {
   const keys = _.union(Object.keys(obj), Object.keys(obj2));
 
   const result = keys.reduce((acc, key) => {
-    const valueBefore = obj[key];
-    const valueAfter = obj2[key];
+    const oldValue = obj[key];
+    const newValue = obj2[key];
     if (_.has(obj2, key) && _.has(obj, key)) {
-      if ((typeof valueAfter === 'object') && (typeof valueBefore === 'object')) {
-        return [...acc, { key, status: 'haveChildren', value: buildAst(valueBefore, valueAfter) }];
+      if ((typeof newValue === 'object') && (typeof oldValue === 'object')) {
+        return [...acc, { key, status: 'nested', children: buildAst(oldValue, newValue) }];
       }
-      if (!(valueBefore === valueAfter)) {
-        return [...acc, {
-          key, status: 'addChanged', value: valueAfter, oldValue: valueBefore,
-        }, { key, status: 'delChanged', value: valueBefore }];
+      if (!(oldValue === newValue)) {
+        return [...acc,
+          {
+            key, status: 'changed', newValue, oldValue,
+          },
+          { key, status: 'deletedWhenChanged', oldValue }];
       }
-      return [...acc, { value: valueBefore, key, status: 'unchanged' }];
+      return [...acc, { key, status: 'unchanged', oldValue }];
     } if (_.has(obj2, key)) {
-      return [...acc, { key, status: 'added', value: valueAfter }];
+      return [...acc, { key, status: 'added', newValue }];
     }
-    return [...acc, { key, status: 'deleted', value: valueBefore }];
+    return [...acc, { key, status: 'deleted', oldValue }];
   }, []);
 
   return result;

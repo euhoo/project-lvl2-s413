@@ -10,14 +10,21 @@ const renderTree = (arr, depth = 1) => {
   };
   const statusObj = {
     unchanged: ' ',
-    haveChildren: ' ',
+    nested: ' ',
     added: '+',
     deleted: '-',
-    addChanged: '+',
-    delChanged: '-',
+    changed: '+',
+    deletedWhenChanged: '-',
   };
-  const str = arr.reduce((acc, obj) => `${acc}${'  '.repeat(depth)}${statusObj[obj.status]} ${obj.key}: ${normalize(obj.value)}\n`,
-    '');
+  const str = arr.reduce((acc, obj) => {
+    const getValue = (oldValue = '', newValue = '') => {
+      if (obj.status === 'changed' || obj.status === 'added') return newValue;
+      // if (obj.status === 'deletedWhenChanged' ||
+      // obj.status === 'unchanged' || obj.status === 'deleted')
+      return oldValue;
+    };
+    return `${acc}${'  '.repeat(depth)}${statusObj[obj.status]} ${obj.key}: ${Array.isArray(obj.children) ? normalize(obj.children) : normalize(getValue(obj.oldValue, obj.newValue))}\n`;
+  }, '');
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;
 };
