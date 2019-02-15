@@ -11,8 +11,8 @@ const renderTree = (arr, depth = 1) => {
   const statusObj = {
     unchanged: ' ',
     haveChildren: ' ',
-    add: '+',
-    del: '-',
+    added: '+',
+    deleted: '-',
     addChanged: '+',
     delChanged: '-',
   };

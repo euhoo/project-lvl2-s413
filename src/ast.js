@@ -17,9 +17,9 @@ const buildAst = (obj = {}, obj2 = {}) => {
       }
       return [...acc, { value: valueBefore, key, status: 'unchanged' }];
     } if (_.has(obj2, key)) {
-      return [...acc, { key, status: 'add', value: valueAfter }];
+      return [...acc, { key, status: 'added', value: valueAfter }];
     }
-    return [...acc, { key, status: 'del', value: valueBefore }];
+    return [...acc, { key, status: 'deleted', value: valueBefore }];
   }, []);
 
   return result;

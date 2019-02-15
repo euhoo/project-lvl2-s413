@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import parser from './parser';
-import render from './renders/render';
+import renderer from './renderers';
 import buildAst from './ast';
 
 const getObj = (pathToFile) => {
@@ -14,6 +14,6 @@ export default (pathToFile1, pathToFile2, type = 'tree') => {
   const objBefore = getObj(pathToFile1);
   const objAfter = getObj(pathToFile2);
   const ast = buildAst(objBefore, objAfter);
-  const result = render(ast, type);
+  const result = renderer(ast, type);
   return result;
 };
