@@ -8,7 +8,14 @@ const renderTree = (arr, depth = 1) => {
     }
     return value;
   };
-  const str = arr.reduce((acc, obj) => `${acc}${'  '.repeat(depth)}${obj.status} ${obj.key}: ${normalize(obj.value)}\n`,
+  const statusObj = {
+    unchanged: ' ',
+    add: '+',
+    del: '-',
+    addChanged: '+',
+    delChanged: '-',
+  };
+  const str = arr.reduce((acc, obj) => `${acc}${'  '.repeat(depth)}${statusObj[obj.status]} ${obj.key}: ${normalize(obj.value)}\n`,
     '');
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;

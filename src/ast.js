@@ -8,16 +8,18 @@ const buildAst = (obj = {}, obj2 = {}) => {
     const valueAfter = obj2[key];
     if (_.has(obj2, key) && _.has(obj, key)) {
       if ((typeof valueAfter === 'object') && (typeof valueBefore === 'object')) {
-        return [...acc, { key, status: ' ', value: buildAst(valueBefore, valueAfter) }];
+        return [...acc, { key, status: 'unchanged', value: buildAst(valueBefore, valueAfter) }];
       }
       if (!(valueBefore === valueAfter)) {
-        return [...acc, { key, status: '+', value: valueAfter }, { key, status: '-', value: valueBefore }];
+        return [...acc, {
+          key, status: 'addChanged', value: valueAfter, oldValue: valueBefore,
+        }, { key, status: 'delChanged', value: valueBefore }];
       }
-      return [...acc, { value: valueBefore, key, status: ' ' }];
+      return [...acc, { value: valueBefore, key, status: 'unchanged' }];
     } if (_.has(obj2, key)) {
-      return [...acc, { key, status: '+', value: valueAfter }];
+      return [...acc, { key, status: 'add', value: valueAfter }];
     }
-    return [...acc, { key, status: '-', value: valueBefore }];
+    return [...acc, { key, status: 'del', value: valueBefore }];
   }, []);
 
   return result;
