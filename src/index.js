@@ -10,9 +10,10 @@ const getObj = (pathToFile) => {
   return parser(data, ext);
 };
 
-export default (pathToFile1, pathToFile2) => {
+export default (pathToFile1, pathToFile2, type = 'tree') => {
   const objBefore = getObj(pathToFile1);
   const objAfter = getObj(pathToFile2);
   const ast = buildAst(objBefore, objAfter);
-  return render(ast);
+  const result = render(ast, type);
+  return result;
 };

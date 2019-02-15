@@ -1,6 +1,6 @@
-const render = (arr, depth = 1) => {
+const renderTree = (arr, depth = 1) => {
   const normalize = (data) => {
-    const value = Array.isArray(data) ? render(data, depth + 2) : data;
+    const value = Array.isArray(data) ? renderTree(data, depth + 2) : data;
     if ((typeof value === 'object')) {
       const keys = Object.keys(value);
       const str = keys.map(key => `${'  '.repeat(depth + 2)}  ${key}: ${value[key]}`);
@@ -13,4 +13,10 @@ const render = (arr, depth = 1) => {
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;
 };
-export default render;
+
+const render = {
+  tree: renderTree,
+  plain: 'renderPlain',
+};
+
+export default (arr, type) => render[type](arr);
