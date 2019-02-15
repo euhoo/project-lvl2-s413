@@ -8,7 +8,7 @@ const buildAst = (obj = {}, obj2 = {}) => {
     const valueAfter = obj2[key];
     if (_.has(obj2, key) && _.has(obj, key)) {
       if ((typeof valueAfter === 'object') && (typeof valueBefore === 'object')) {
-        return [...acc, { key, status: 'unchanged', value: buildAst(valueBefore, valueAfter) }];
+        return [...acc, { key, status: 'haveChildren', value: buildAst(valueBefore, valueAfter) }];
       }
       if (!(valueBefore === valueAfter)) {
         return [...acc, {
