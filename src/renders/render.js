@@ -1,5 +1,5 @@
-import tree from './renders/tree';
-import plain from './renders/plain';
+import tree from './tree';
+import plain from './plain';
 
 const render = {
   tree,

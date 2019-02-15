@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import parser from './parser';
-import render from './render';
+import render from './renders/render';
 import buildAst from './ast';
 
 const getObj = (pathToFile) => {
