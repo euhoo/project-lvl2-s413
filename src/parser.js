@@ -6,4 +6,4 @@ const parser = {
   ini: ini.parse,
   yml: yaml.safeLoad,
 };
-export default (data, extention) => parser[extention](data);
+export default (data, type) => parser[type](data);

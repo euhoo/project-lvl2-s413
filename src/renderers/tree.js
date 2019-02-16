@@ -8,7 +8,7 @@ const getCorrectValue = (data, depth, func) => {
   }
   return value;
 };
-const getValue = obj => (obj.status === 'added' ? obj.newValue : obj.oldValue);
+const getValue = obj => (obj.type === 'added' ? obj.newValue : obj.oldValue);
 
 
 const renderTree = (arr, depth = 1) => {
@@ -23,7 +23,7 @@ const renderTree = (arr, depth = 1) => {
       changed: `+ ${obj.key}: ${getCorrectValue(obj.newValue, depth)}\n${'  '.repeat(depth)}- ${obj.key}: ${getCorrectValue(obj.oldValue, depth)}\n`,
     };
 
-    return `${acc}${'  '.repeat(depth)}${statusObj[obj.status]}`;
+    return `${acc}${'  '.repeat(depth)}${statusObj[obj.type]}`;
   }, '');
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;

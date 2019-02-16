@@ -8,19 +8,19 @@ const buildAst = (obj = {}, obj2 = {}) => {
     const newValue = obj2[key];
     if (_.has(obj2, key) && _.has(obj, key)) {
       if ((typeof newValue === 'object') && (typeof oldValue === 'object')) {
-        return [...acc, { key, status: 'nested', children: buildAst(oldValue, newValue) }];
+        return [...acc, { key, type: 'nested', children: buildAst(oldValue, newValue) }];
       }
       if (!(oldValue === newValue)) {
         return [...acc,
           {
-            key, status: 'changed', newValue, oldValue,
+            key, type: 'changed', newValue, oldValue,
           }];
       }
-      return [...acc, { key, status: 'unchanged', oldValue }];
+      return [...acc, { key, type: 'unchanged', oldValue }];
     } if (_.has(obj2, key)) {
-      return [...acc, { key, status: 'added', newValue }];
+      return [...acc, { key, type: 'added', newValue }];
     }
-    return [...acc, { key, status: 'deleted', oldValue }];
+    return [...acc, { key, type: 'deleted', oldValue }];
   }, []);
 
   return result;

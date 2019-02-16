@@ -7,4 +7,4 @@ const render = {
   json: JSON.stringify,
 };
 
-export default (arr, type) => render[type](arr);
+export default (ast, type) => render[type](ast);

@@ -8,15 +8,15 @@ const getCorrectKey = (obj, func) => (obj.children ? func(obj.children, obj.key)
 const getPattern = (obj, parent, func) => `${checkParents(parent)}${getCorrectKey(obj, func)}`;
 
 const getStatusStr = (obj, pattern) => {
-  const { status } = obj;
-  const allStatusesObj = {
+  const { type } = obj;
+  const allTypes = {
     changed: `${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}~`,
     unchanged: '',
     nested: `${pattern}~`,
     deleted: `${pattern}' was removed~`,
     added: `${pattern}' was added with value: ${makeQuotes(obj.newValue)}~`,
   };
-  return allStatusesObj[status];
+  return allTypes[type];
 };
 const getStr = (arr, parent) => {
   const str = arr.reduce((acc, obj) => {
