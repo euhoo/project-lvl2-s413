@@ -13,7 +13,6 @@ const getStr = (arr, parent = '') => {
       nested: `${checkParents(parent)}${checkObj(obj)}~`,
       deleted: `${checkParents(parent)}${obj.key}' was removed~`,
       added: `${checkParents(parent)}${obj.key}' was added with value: ${makeClean(obj.newValue)}~`,
-      deletedWhenChanged: '', // эту строчку можно удалить,когда удалю в AST { key, status: 'deletedWhenChanged', oldValue }
     };
     return `${acc}${statuses[obj.status]}`;
   }, '');

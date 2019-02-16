@@ -14,8 +14,7 @@ const buildAst = (obj = {}, obj2 = {}) => {
         return [...acc,
           {
             key, status: 'changed', newValue, oldValue,
-          },
-          { key, status: 'deletedWhenChanged', oldValue }];
+          }];
       }
       return [...acc, { key, status: 'unchanged', oldValue }];
     } if (_.has(obj2, key)) {

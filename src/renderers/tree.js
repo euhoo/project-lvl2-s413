@@ -1,4 +1,5 @@
-const getCorrectValue = (data, func, depth) => {
+
+const getCorrectValue = (data, depth, func) => {
   const value = Array.isArray(data) ? func(data, depth + 2) : data;
   if ((typeof value === 'object')) {
     const keys = Object.keys(value);
@@ -7,21 +8,22 @@ const getCorrectValue = (data, func, depth) => {
   }
   return value;
 };
-const getValue = (oldValue = '', newValue = '', obj) => (obj.status === 'changed' || obj.status === 'added' ? newValue : oldValue);
+const getValue = obj => (obj.status === 'added' ? obj.newValue : obj.oldValue);
 
-const statusObj = {
-  unchanged: ' ',
-  nested: ' ',
-  added: '+',
-  deleted: '-',
-  changed: '+',
-  deletedWhenChanged: '-',
-};
+
 const renderTree = (arr, depth = 1) => {
   const str = arr.reduce((acc, obj) => {
-    const dirtyValue = obj.children || getValue(obj.oldValue, obj.newValue, obj);
-    const value = getCorrectValue(dirtyValue, renderTree, depth);
-    return `${acc}${'  '.repeat(depth)}${statusObj[obj.status]} ${obj.key}: ${value}\n`;
+    const dirtyValue = obj.children || getValue(obj);
+    const value = getCorrectValue(dirtyValue, depth, renderTree);
+    const statusObj = {
+      unchanged: `  ${obj.key}: ${value}\n`,
+      nested: `  ${obj.key}: ${value}\n`,
+      added: `+ ${obj.key}: ${value}\n`,
+      deleted: `- ${obj.key}: ${value}\n`,
+      changed: `+ ${obj.key}: ${getCorrectValue(obj.newValue, depth)}\n${'  '.repeat(depth)}- ${obj.key}: ${getCorrectValue(obj.oldValue, depth)}\n`,
+    };
+
+    return `${acc}${'  '.repeat(depth)}${statusObj[obj.status]}`;
   }, '');
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;
