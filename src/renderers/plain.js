@@ -1,20 +1,24 @@
-const makeClean = (value) => {
-  if (typeof value === 'object') return '[complex value]';
+const makeQuotes = (value) => {
+  if (value instanceof Object) return '[complex value]';
   if (typeof value === 'boolean') return value;
   return `'${value}'`;
 };
-const getStr = (arr, parent = '') => {
-  const checkObj = obj => ((Array.isArray(obj.children)) ? getStr(obj.children, obj.key) : obj);
-  const checkParents = par => ((par.length === 0) ? par : `${par}.`);
+const checkParents = parent => ((parent.length === 0) ? parent : `${parent}.`);
+const getCorrectKey = (obj, func) => (obj.children ? func(obj.children, obj.key) : obj.key);
+const getPattern = (obj, parent, func) => `${checkParents(parent)}${getCorrectKey(obj, func)}`;
+
+const getStr = (arr, parent) => {
   const str = arr.reduce((acc, obj) => {
+    const pattern = getPattern(obj, parent, getStr);
+    const { status } = obj;
     const statuses = {
-      changed: `${checkParents(parent)}${obj.key}' was updated. From ${makeClean(obj.oldValue)} to ${makeClean(obj.newValue)}~`,
+      changed: `${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}~`,
       unchanged: '',
-      nested: `${checkParents(parent)}${checkObj(obj)}~`,
-      deleted: `${checkParents(parent)}${obj.key}' was removed~`,
-      added: `${checkParents(parent)}${obj.key}' was added with value: ${makeClean(obj.newValue)}~`,
+      nested: `${pattern}~`,
+      deleted: `${pattern}' was removed~`,
+      added: `${pattern}' was added with value: ${makeQuotes(obj.newValue)}~`,
     };
-    return `${acc}${statuses[obj.status]}`;
+    return `${acc}${statuses[status]}`;
   }, '');
   return str.substring(0, str.length - 1).split('~').join('\nProperty \'');
 };
