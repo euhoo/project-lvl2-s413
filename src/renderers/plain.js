@@ -3,27 +3,28 @@ const makeQuotes = (value) => {
   if (typeof value === 'boolean') return value;
   return `'${value}'`;
 };
-const checkParents = parent => ((parent.length === 0) ? parent : `${parent}.`);
-const getCorrectKey = (obj, func) => (obj.children ? func(obj.children, obj.key) : obj.key);
+const checkParents = parent => ((parent.length === 0) ? parent : `${parent}.`); // сделать без if и тренарного оператора
+const getCorrectKey = (obj, func) => (obj.type === 'nested' ? func(obj.children, obj.key) : obj.key);
 const getPattern = (obj, parent, func) => `${checkParents(parent)}${getCorrectKey(obj, func)}`;
 
-const getStatusStr = (obj, pattern) => {
+const getStrFromTypes = (obj, pattern) => {
   const { type } = obj;
-  const allTypes = {
-    changed: `${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}~`,
+  const allTypesObj = {
+    changed: [`${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}`],
     unchanged: '',
-    nested: `${pattern}~`,
-    deleted: `${pattern}' was removed~`,
-    added: `${pattern}' was added with value: ${makeQuotes(obj.newValue)}~`,
+    nested: [`${pattern}`],
+    deleted: [`${pattern}' was removed`],
+    added: [`${pattern}' was added with value: ${makeQuotes(obj.newValue)}`],
   };
-  return allTypes[type];
+  return allTypesObj[type];
 };
-const getStr = (arr, parent) => {
-  const str = arr.reduce((acc, obj) => {
+
+const getStr = (ast, parent) => ast
+  .filter(item => item.type !== 'unchanged')
+  .map((obj) => {
     const pattern = getPattern(obj, parent, getStr);
-    const strOfStatuses = getStatusStr(obj, pattern);
-    return `${acc}${strOfStatuses}`;
-  }, '');
-  return str.substring(0, str.length - 1).split('~').join('\nProperty \'');
-};
+    return getStrFromTypes(obj, pattern);
+  })
+  .join('\nProperty \'');
+  // попробовать сделать,чтобы Property и кавычка в теле функции реализовывались
 export default (arr, parent = '') => `Property '${getStr(arr, parent)}`;

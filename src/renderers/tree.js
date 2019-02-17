@@ -15,7 +15,7 @@ const renderTree = (arr, depth = 1) => {
   const str = arr.reduce((acc, obj) => {
     const dirtyValue = obj.children || getValue(obj);
     const value = getCorrectValue(dirtyValue, depth, renderTree);
-    const statusObj = {
+    const allTypes = {
       unchanged: `  ${obj.key}: ${value}\n`,
       nested: `  ${obj.key}: ${value}\n`,
       added: `+ ${obj.key}: ${value}\n`,
@@ -23,7 +23,7 @@ const renderTree = (arr, depth = 1) => {
       changed: `+ ${obj.key}: ${getCorrectValue(obj.newValue, depth)}\n${'  '.repeat(depth)}- ${obj.key}: ${getCorrectValue(obj.oldValue, depth)}\n`,
     };
 
-    return `${acc}${'  '.repeat(depth)}${statusObj[obj.type]}`;
+    return `${acc}${'  '.repeat(depth)}${allTypes[obj.type]}`;
   }, '');
 
   return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;
