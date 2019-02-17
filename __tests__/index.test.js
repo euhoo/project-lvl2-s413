@@ -3,21 +3,25 @@ import genDiff from '../src';
 
 const path = '__tests__/__fixtures__/';
 const types = ['Json', 'Yml', 'Ini'];
-const waysOfTest = ['Flatten', 'Tree', 'FlattenPlain', 'Plain'];
-const testsFormat = {
+const testMethods = ['Flatten', 'Tree', 'FlattenPlain', 'Plain'];
+
+const testFormats = {
   Flatten: 'tree',
   Tree: 'tree',
   FlattenPlain: 'plain',
   Plain: 'plain',
 };
-const fileName = {
+
+const fileNameParts = {
   Flatten: 'Flatten',
   FlattenPlain: 'Flatten',
   Tree: 'Tree',
   Plain: 'Tree',
 };
 
-waysOfTest.forEach(item => test.each(types)(`Test ${item} %s`, (element) => {
-  const received = genDiff(`${path}before${fileName[item]}.${element.toLowerCase()}`, `${path}after${fileName[item]}.${element.toLowerCase()}`, `${testsFormat[item]}`);
-  expect(fs.readFileSync(`${path}expected${item}.txt`, 'utf-8')).toBe(received);
+testMethods.forEach(method => test.each(types)(`Test ${method} %s`, (element) => {
+  const findPath = item => `${path}${item}${fileNameParts[method]}.${element.toLowerCase()}`;
+  const received = genDiff(findPath('before'), findPath('after'), `${testFormats[method]}`);
+  const expected = fs.readFileSync(`${path}expected${method}.txt`, 'utf-8');
+  expect(received).toBe(expected);
 }));
