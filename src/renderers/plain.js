@@ -3,27 +3,20 @@ const makeQuotes = (value) => {
   if (typeof value === 'boolean') return value;
   return `'${value}'`;
 };
-const checkPoint = parent => ((parent.length === 0) ? '' : '.'); // сделать без if и тренарного оператора
+const checkPoint = parent => ((parent.length === 0) ? '' : '.');
 const getCorrectKey = (obj, func) => (obj.type === 'nested' ? func(obj.children, obj.key) : obj.key);
-const getPattern = (obj, parent, func) => `${parent}${checkPoint(parent)}${getCorrectKey(obj, func)}`;
-
-const getStrFromTypes = (obj, pattern) => {
-  const { type } = obj;
-  const typesObj = {
-    changed: [`${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}`],
-    unchanged: '',
-    nested: [`${pattern}`],
-    deleted: [`${pattern}' was removed`],
-    added: [`${pattern}' was added with value: ${makeQuotes(obj.newValue)}`],
-  };
-  return typesObj[type];
-};
-
 const getStr = (ast, parent) => ast
-  .filter(item => item.type !== 'unchanged')
+  .filter(obj => obj.type !== 'unchanged')
   .map((obj) => {
-    const pattern = getPattern(obj, parent, getStr);
-    return getStrFromTypes(obj, pattern);
+    const { type } = obj;
+    const typesObj = {
+      changed: [`${parent}${checkPoint(parent)}${getCorrectKey(obj, getStr)}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}`],
+      unchanged: '',
+      nested: [`${parent}${checkPoint(parent)}${getCorrectKey(obj, getStr)}`],
+      deleted: [`${parent}${checkPoint(parent)}${getCorrectKey(obj, getStr)}' was removed`],
+      added: [`${parent}${checkPoint(parent)}${getCorrectKey(obj, getStr)}' was added with value: ${makeQuotes(obj.newValue)}`],
+    };
+    return typesObj[type];
   })
   .join('\nProperty \''); // присоединяю Property к каждой строчке,начиная со второй
   // попробовать сделать,чтобы Property и кавычка в теле функции реализовывались
