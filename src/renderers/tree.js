@@ -10,14 +10,14 @@ const getCorrectValue = (value, depth) => {
 const renderTree = (ast, depth = 0) => {
   const makeStr = (operation, key, value) => `${'  '.repeat(depth * 2 + 1)}${operation} ${key}: ${value}`;
 
-  const allTypes = {
+  const typesObj = {
     unchanged: obj => [makeStr(' ', obj.key, getCorrectValue(obj.oldValue, depth + 1))],
     nested: obj => [makeStr(' ', obj.key, renderTree(obj.children, depth + 1))],
     added: obj => [makeStr('+', obj.key, getCorrectValue(obj.newValue, depth + 1))],
     deleted: obj => [makeStr('-', obj.key, getCorrectValue(obj.oldValue, depth + 1))],
-    changed: obj => [[allTypes.added(obj)], [allTypes.deleted(obj)]],
+    changed: obj => [[typesObj.added(obj)], [typesObj.deleted(obj)]],
   };
-  const mapped = ast.map(obj => allTypes[obj.type](obj));
+  const mapped = ast.map(obj => typesObj[obj.type](obj));
   const result = _
     .flatten(mapped)
     .join('\n');

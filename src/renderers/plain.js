@@ -9,14 +9,14 @@ const getPattern = (obj, parent, func) => `${parent}${checkPoint(parent)}${getCo
 
 const getStrFromTypes = (obj, pattern) => {
   const { type } = obj;
-  const allTypesObj = {
+  const typesObj = {
     changed: [`${pattern}' was updated. From ${makeQuotes(obj.oldValue)} to ${makeQuotes(obj.newValue)}`],
     unchanged: '',
     nested: [`${pattern}`],
     deleted: [`${pattern}' was removed`],
     added: [`${pattern}' was added with value: ${makeQuotes(obj.newValue)}`],
   };
-  return allTypesObj[type];
+  return typesObj[type];
 };
 
 const getStr = (ast, parent) => ast
