@@ -1,10 +1,10 @@
 import tree from './tree';
 import plain from './plain';
 
-const render = {
+const renderer = {
   tree,
   plain,
   json: JSON.stringify,
 };
 
-export default (ast, type) => render[type](ast);
+export default (ast, type) => renderer[type](ast);
