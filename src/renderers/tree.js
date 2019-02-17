@@ -1,32 +1,29 @@
+import _ from 'lodash';
 
-const getCorrectValue = (data, depth, func) => {
-  const value = Array.isArray(data) ? func(data, depth + 2) : data;
-  if ((typeof value === 'object')) {
-    const keys = Object.keys(value);
-    const str = keys.map(key => `${'  '.repeat(depth + 2)}  ${key}: ${value[key]}`);
-    return `{\n${str}\n${'  '.repeat(depth + 1)}}`;
-  }
-  return value;
+const getCorrectValue = (value, depth) => {
+  if (!(typeof value === 'object')) return value;
+  const keys = Object.keys(value);
+  const result = keys.map(key => `${' '.repeat(depth * 4 + 4)}${key}: ${value[key]}`);
+  return `{\n${result.join('\n')}\n${' '.repeat(depth * 4)}}`;
 };
-const getValue = obj => (obj.type === 'added' ? obj.newValue : obj.oldValue);
 
+const renderTree = (ast, depth = 0) => {
+  const makeStr = (operation, key, value) => `${' '.repeat(depth * 4 + 2)}${operation} ${key}: ${value}`;
 
-const renderTree = (arr, depth = 1) => {
-  const str = arr.reduce((acc, obj) => {
-    const dirtyValue = obj.children || getValue(obj);
-    const value = getCorrectValue(dirtyValue, depth, renderTree);
-    const allTypes = {
-      unchanged: `  ${obj.key}: ${value}\n`,
-      nested: `  ${obj.key}: ${value}\n`,
-      added: `+ ${obj.key}: ${value}\n`,
-      deleted: `- ${obj.key}: ${value}\n`,
-      changed: `+ ${obj.key}: ${getCorrectValue(obj.newValue, depth)}\n${'  '.repeat(depth)}- ${obj.key}: ${getCorrectValue(obj.oldValue, depth)}\n`,
-    };
-
-    return `${acc}${'  '.repeat(depth)}${allTypes[obj.type]}`;
-  }, '');
-
-  return `{\n${str}${' '.repeat(depth * 2 - 2)}}`;
+  const allTypes = {
+    unchanged: obj => makeStr(' ', obj.key, getCorrectValue(obj.oldValue, depth + 1)),
+    nested: obj => makeStr(' ', obj.key, renderTree(obj.children, depth + 1)),
+    added: obj => makeStr('+', obj.key, getCorrectValue(obj.newValue, depth + 1)),
+    deleted: obj => makeStr('-', obj.key, getCorrectValue(obj.oldValue, depth + 1)),
+    changed: obj => [makeStr('+', obj.key, getCorrectValue(obj.newValue, depth + 1)), makeStr('-', obj.key, getCorrectValue(obj.oldValue, depth + 1))],
+    // changed: obj => [[allTypes.added(obj)], [allTypes.deleted(obj)]],
+    // попробовать это реализовать
+  };
+  const mapped = ast.map(obj => allTypes[obj.type](obj));
+  const result = _
+    .flatten(mapped)
+    .join('\n');
+  return `{\n${result}\n${' '.repeat(depth * 4)}}`;
 };
 
 export default renderTree;
