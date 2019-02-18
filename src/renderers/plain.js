@@ -15,7 +15,7 @@ const typesObj = {
 };
 
 export default (data) => {
-  const renderPlain = (item, parent = []) => item
+  const renderPlain = (ast, parent = []) => ast
     .filter(obj => obj.type !== 'unchanged')
     .map(el => typesObj[el.type](el, parent, renderPlain));
   return _.flatten(renderPlain(data))
